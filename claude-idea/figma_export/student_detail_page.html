@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EMC Yoga School - Student Details</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Noto Serif JP"', 'serif'],
+            sans: ['"Noto Sans JP"', 'sans-serif'],
+          },
+          colors: {
+            stone: {
+              50: '#fafaf9',
+              100: '#f5f5f4',
+              200: '#e7e5e4',
+              300: '#d6d3d1',
+              400: '#a8a29e',
+              500: '#78716c',
+              600: '#57534e',
+              700: '#44403c',
+              800: '#292524',
+            },
+            emerald: {
+              100: '#d1fae5',
+              600: '#059669',
+              700: '#047857',
+            },
+            blue: {
+                100: '#dbeafe',
+                700: '#1d4ed8',
+            },
+            amber: {
+                100: '#fef3c7',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-stone-50">
+
+  <!-- Admin Header would be here -->
+
+  <main class="container mx-auto px-4 py-6">
+    <div class="max-w-5xl mx-auto">
+      <div class="mb-6">
+        <a href="#" class="flex items-center text-sm text-stone-500 hover:text-stone-800">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-2"><path d="m15 18-6-6 6-6"></path></svg>
+          受講生管理に戻る
+        </a>
+      </div>
+
+      <!-- Student Profile Header -->
+      <div class="rounded-lg border bg-white text-card-foreground shadow-sm mb-6">
+        <div class="p-6 flex items-center space-x-6">
+            <div class="relative flex h-20 w-20 shrink-0 overflow-hidden rounded-full">
+                <span class="flex h-full w-full items-center justify-center rounded-full bg-stone-100 text-3xl font-serif text-stone-600">田</span>
+            </div>
+            <div class="flex-1">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-serif text-stone-800">田中 美咲</h1>
+                        <p class="text-sm text-stone-500">tanaka@example.com</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-emerald-100 text-emerald-800">アクティブ</span>
+                        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-9 px-3 border border-stone-200 hover:bg-stone-100">メッセージを送る</button>
+                    </div>
+                </div>
+                <div class="text-xs text-stone-500 mt-3">参加日: 2025-01-15 | 最終アクセス: 2時間前</div>
+            </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Column: Progress -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="rounded-lg border bg-white text-card-foreground shadow-sm">
+                <div class="p-6"><h3 class="text-lg font-semibold leading-none tracking-tight font-serif text-stone-800">学習進捗</h3></div>
+                <div class="p-6 pt-0">
+                    <div class="mb-4">
+                        <div class="flex justify-between text-sm mb-1"><span class="text-stone-600">全体の進捗</span><span class="font-medium text-stone-800">45%</span></div>
+                        <div class="w-full bg-stone-200 rounded-full h-2"><div class="bg-emerald-600 h-2 rounded-full" style="width: 45%"></div></div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+                        <div class="bg-stone-50 p-3 rounded-lg"><div class="text-xl font-bold text-emerald-700">12</div><p class="text-xs text-stone-500 mt-1">完了レッスン</p></div>
+                        <div class="bg-stone-50 p-3 rounded-lg"><div class="text-xl font-bold text-emerald-700">28.5h</div><p class="text-xs text-stone-500 mt-1">総学習時間</p></div>
+                        <div class="bg-stone-50 p-3 rounded-lg"><div class="text-xl font-bold text-emerald-700">2</div><p class="text-xs text-stone-500 mt-1">ライブ参加</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rounded-lg border bg-white text-card-foreground shadow-sm">
+                <div class="p-6"><h3 class="text-lg font-semibold leading-none tracking-tight font-serif text-stone-800">チャプター別進捗</h3></div>
+                <div class="p-0">
+                    <div class="divide-y divide-stone-100">
+                        <div class="p-4 flex items-center gap-4"> <div class="flex-1"><p class="text-sm font-medium">第1章 ヨガ哲学・歴史・瞑想</p></div> <div class="w-1/3"><div class="w-full bg-stone-200 rounded-full h-1.5"><div class="bg-emerald-600 h-1.5 rounded-full" style="width: 100%"></div></div></div> <div class="text-xs text-stone-500">8/8</div> </div>
+                        <div class="p-4 flex items-center gap-4"> <div class="flex-1"><p class="text-sm font-medium">第2章 アーサナ・解剖学</p></div> <div class="w-1/3"><div class="w-full bg-stone-200 rounded-full h-1.5"><div class="bg-emerald-600 h-1.5 rounded-full" style="width: 33%"></div></div></div> <div class="text-xs text-stone-500">4/12</div> </div>
+                        <div class="p-4 flex items-center gap-4"> <div class="flex-1"><p class="text-sm font-medium">第3章 呼吸法・生理学</p></div> <div class="w-1/3"><div class="w-full bg-stone-200 rounded-full h-1.5"><div class="bg-emerald-600 h-1.5 rounded-full" style="width: 0%"></div></div></div> <div class="text-xs text-stone-500">0/6</div> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Activity -->
+        <div class="space-y-6">
+            <div class="rounded-lg border bg-white text-card-foreground shadow-sm">
+                <div class="p-6"><h3 class="text-lg font-semibold leading-none tracking-tight font-serif text-stone-800">最近の活動</h3></div>
+                <div class="p-6 pt-0">
+                    <ul class="space-y-4">
+                        <li class="flex items-start"><div class="w-8 h-8 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center mr-3 flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="m22 8-6 4 6 4V8Z"></path><rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect></svg></div><div><p class="text-sm">「太陽礼拝のフロー」を視聴開始</p><p class="text-xs text-stone-400 mt-0.5">2時間前</p></div></li>
+                        <li class="flex items-start"><div class="w-8 h-8 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mr-3 flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div><div><p class="text-sm">「ヨガの歴史」を完了</p><p class="text-xs text-stone-400 mt-0.5">1日前</p></div></li>
+                        <li class="flex items-start"><div class="w-8 h-8 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center mr-3 flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line></svg></div><div><p class="text-sm">ライブセッションに参加</p><p class="text-xs text-stone-400 mt-0.5">3日前</p></div></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>

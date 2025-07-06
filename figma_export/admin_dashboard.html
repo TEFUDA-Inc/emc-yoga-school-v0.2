@@ -1,0 +1,386 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EMC Yoga School - Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Noto Serif JP"', 'serif'],
+            sans: ['"Noto Sans JP"', 'sans-serif'],
+          },
+          colors: {
+            stone: {
+              50: '#fafaf9',
+              100: '#f5f5f4',
+              200: '#e7e5e4',
+              400: '#a8a29e',
+              500: '#78716c',
+              600: '#57534e',
+              800: '#292524',
+            },
+            emerald: {
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+            },
+            blue: {
+              100: '#dbeafe',
+              700: '#1d4ed8',
+              800: '#1e40af',
+            },
+            amber: {
+              100: '#fef3c7',
+              600: '#d97706',
+              700: '#b45309',
+              800: '#92400e',
+            },
+            red: {
+              100: '#fee2e2',
+              500: '#ef4444',
+              700: '#b91c1c',
+              800: '#991b1b',
+            },
+            purple: {
+              100: '#f3e8ff',
+              700: '#7e22ce',
+              800: '#6b21a8',
+            },
+            green: {
+                100: '#dcfce7',
+                500: '#22c55e',
+                600: '#16a34a',
+                700: '#15803d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-stone-50">
+  <div id="root"></div>
+
+  <script>
+    // Mock data from the original component
+    const stats = {
+      totalUsers: 42,
+      activeUsers: 38,
+      totalLessons: 26,
+      completionRate: 68,
+      avgWatchTime: 45.2,
+      liveSessionAttendance: 89,
+    };
+
+    const recentUsers = [
+      { id: 1, name: "田中 美咲", email: "tanaka@example.com", joinDate: "2025-01-15", progress: 45, status: "active", lastActive: "2時間前" },
+      { id: 2, name: "佐藤 花子", email: "sato@example.com", joinDate: "2025-01-12", progress: 67, status: "active", lastActive: "5分前" },
+      { id: 3, name: "山田 由美", email: "yamada@example.com", joinDate: "2025-01-10", progress: 23, status: "inactive", lastActive: "3日前" },
+      { id: 4, name: "鈴木 恵子", email: "suzuki@example.com", joinDate: "2025-01-08", progress: 89, status: "active", lastActive: "1時間前" },
+    ];
+
+    const contentStats = [
+      { id: 1, title: "第1章 ヨガ哲学・歴史・瞑想", type: "chapter", lessons: 8, avgCompletion: 72, views: 156 },
+      { id: 2, title: "ヨーガとは", type: "lesson", duration: "24分", completion: 85, views: 42 },
+      { id: 3, title: "ヨガの歴史", type: "lesson", duration: "18分", completion: 78, views: 39 },
+      { id: 4, title: "2/16 ライブセッション", type: "live", duration: "55分", attendance: 32, views: 28 },
+    ];
+
+    const announcements = [
+      { id: 1, title: "システムメンテナンスのお知らせ", date: "2025-02-15", status: "draft", priority: "high" },
+      { id: 2, title: "新教材の追加について", date: "2025-02-10", status: "published", priority: "medium" },
+      { id: 3, title: "ライブセッション変更のお知らせ", date: "2025-02-08", status: "published", priority: "high" },
+    ];
+
+    // Icons SVG map
+    const icons = {
+      Users: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-emerald-700"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+      BookOpen: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-amber-700"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+      Play: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><polygon points="5 3 19 12 5 21 5 3"/></svg>`,
+      TrendingUp: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-purple-700"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`,
+      Settings: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>`,
+      PlusCircle: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>`,
+      Search: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-stone-400"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
+      Filter: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-2"><polygon points="22 3 2 3 10 12.46V19l4 2v-8.54L22 3z"/></svg>`,
+      MoreHorizontal: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>`,
+      Edit: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
+      Eye: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>`,
+      Download: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`,
+      Leaf: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-emerald-700"><path d="M11 20A7 7 0 0 1 4 13H2a10 10 0 0 0 10 10z"/><path d="M12 2a7 7 0 0 1 7 7h2a10 10 0 0 0-10-10z"/></svg>`,
+      BarChart3: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>`,
+      UserCheck: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-blue-700"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>`,
+      Clock: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-green-700"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+      Video: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-red-700"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg>`,
+      Bell: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-stone-500"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>`,
+    };
+
+    const App = () => {
+      let activeTab = 'overview';
+      let selectedUser = null;
+
+      const ComponentLibrary = () => `
+        <div class="space-y-8">
+          <div>
+            <h2 class="text-2xl font-serif text-stone-800 mb-4">EMC Yoga School コンポーネントライブラリ</h2>
+            <p class="text-stone-600 mb-8">ブランドガイドラインに沿った統一感のあるUIコンポーネント集</p>
+          </div>
+          <div class="p-4 border border-stone-200 rounded-lg">
+            <div class="font-serif text-stone-800 mb-2">ステータスインジケーター</div>
+            <div class="text-sm text-stone-500 mb-4">ユーザーやコンテンツの状態を示すバッジ</div>
+            <div class="flex flex-wrap gap-3">
+              <span class="bg-emerald-100 text-emerald-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">アクティブ</span>
+              <span class="bg-stone-100 text-stone-600 text-xs font-medium me-2 px-2.5 py-0.5 rounded">非アクティブ</span>
+              <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">視聴中</span>
+              <span class="bg-amber-100 text-amber-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">保留中</span>
+              <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">要注意</span>
+              <span class="bg-purple-100 text-purple-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded">VIP</span>
+            </div>
+          </div>
+          <div class="p-4 border border-stone-200 rounded-lg">
+            <div class="font-serif text-stone-800 mb-2">進捗インジケーター</div>
+            <div class="text-sm text-stone-500 mb-4">学習進捗を視覚的に表示</div>
+            <div class="space-y-4">
+              <div>
+                <div class="flex justify-between text-sm mb-1"><span>初級レベル</span><span>25%</span></div>
+                <div class="w-full bg-stone-200 rounded-full h-2"><div class="bg-emerald-600 h-2 rounded-full" style="width: 25%"></div></div>
+              </div>
+              <div>
+                <div class="flex justify-between text-sm mb-1"><span>中級レベル</span><span>60%</span></div>
+                <div class="w-full bg-stone-200 rounded-full h-2"><div class="bg-emerald-600 h-2 rounded-full" style="width: 60%"></div></div>
+              </div>
+              <div>
+                <div class="flex justify-between text-sm mb-1"><span>上級レベル</span><span>90%</span></div>
+                <div class="w-full bg-stone-200 rounded-full h-2"><div class="bg-emerald-600 h-2 rounded-full" style="width: 90%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const OverviewDashboard = () => `
+        <div class="space-y-6">
+          <div class="flex justify-between items-center">
+            <div>
+              <h1 class="text-2xl font-serif text-stone-800">管理者ダッシュボード</h1>
+              <p class="text-stone-500">EMC Yoga School の運営状況</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                ${icons.Download} レポート出力
+              </button>
+              <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-emerald-700 text-primary-foreground hover:bg-emerald-800 h-9 px-3">
+                ${icons.PlusCircle} 新規作成
+              </button>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm"><div class="p-6"><div class="flex items-center justify-between"><div><p class="text-sm font-medium text-stone-500">総受講生数</p><p class="text-2xl font-bold text-emerald-700">${stats.totalUsers}</p><p class="text-xs text-stone-400 mt-1"><span class="text-emerald-600">+3</span> 今月</p></div><div class="h-12 w-12 bg-emerald-100 rounded-lg flex items-center justify-center">${icons.Users}</div></div></div></div>
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm"><div class="p-6"><div class="flex items-center justify-between"><div><p class="text-sm font-medium text-stone-500">アクティブユーザー</p><p class="text-2xl font-bold text-blue-700">${stats.activeUsers}</p><p class="text-xs text-stone-400 mt-1"><span class="text-blue-600">90%</span> アクティブ率</p></div><div class="h-12 w-12 bg-blue-100 rounded-lg flex items-center justify-center">${icons.UserCheck}</div></div></div></div>
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm"><div class="p-6"><div class="flex items-center justify-between"><div><p class="text-sm font-medium text-stone-500">総レッスン数</p><p class="text-2xl font-bold text-amber-700">${stats.totalLessons}</p><p class="text-xs text-stone-400 mt-1"><span class="text-amber-600">+2</span> 今週</p></div><div class="h-12 w-12 bg-amber-100 rounded-lg flex items-center justify-center">${icons.BookOpen}</div></div></div></div>
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm"><div class="p-6"><div class="flex items-center justify-between"><div><p class="text-sm font-medium text-stone-500">平均完了率</p><p class="text-2xl font-bold text-purple-700">${stats.completionRate}%</p><p class="text-xs text-stone-400 mt-1"><span class="text-purple-600">+5%</span> 先月比</p></div><div class="h-12 w-12 bg-purple-100 rounded-lg flex items-center justify-center">${icons.TrendingUp}</div></div></div></div>
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm"><div class="p-6"><div class="flex items-center justify-between"><div><p class="text-sm font-medium text-stone-500">平均視聴時間</p><p class="text-2xl font-bold text-green-700">${stats.avgWatchTime}分</p><p class="text-xs text-stone-400 mt-1"><span class="text-green-600">+8%</span> 先月比</p></div><div class="h-12 w-12 bg-green-100 rounded-lg flex items-center justify-center">${icons.Clock}</div></div></div></div>
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm"><div class="p-6"><div class="flex items-center justify-between"><div><p class="text-sm font-medium text-stone-500">ライブ参加率</p><p class="text-2xl font-bold text-red-700">${stats.liveSessionAttendance}%</p><p class="text-xs text-stone-400 mt-1"><span class="text-red-600">-2%</span> 先月比</p></div><div class="h-12 w-12 bg-red-100 rounded-lg flex items-center justify-center">${icons.Video}</div></div></div></div>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+              <div class="p-6"><h3 class="font-semibold leading-none tracking-tight font-serif text-stone-800">最近の受講生</h3><p class="text-sm text-muted-foreground">新規登録・アクティブユーザー</p></div>
+              <div class="p-6 pt-0">
+                <div class="space-y-4">
+                  ${recentUsers.map(user => `
+                    <div class="flex items-center justify-between p-3 hover:bg-stone-50 rounded-lg cursor-pointer">
+                      <div class="flex items-center space-x-3">
+                        <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"><span class="flex h-full w-full items-center justify-center rounded-full bg-muted">${user.name.charAt(0)}</span></span>
+                        <div>
+                          <h3 class="text-sm font-medium text-stone-800">${user.name}</h3>
+                          <p class="text-xs text-stone-500">${user.email}</p>
+                          <div class="flex items-center mt-1">
+                            <span class="text-xs ${user.status === 'active' ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-100 text-stone-600'} inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">${user.status === 'active' ? 'アクティブ' : '非アクティブ'}</span>
+                            <span class="text-xs text-stone-400 ml-2">${user.progress}% 完了</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="text-right">
+                        <p class="text-xs text-stone-400">${user.lastActive}</p>
+                        <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 mt-1">${icons.Eye}</button>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+            <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+              <div class="p-6"><h3 class="font-semibold leading-none tracking-tight font-serif text-stone-800">コンテンツ統計</h3><p class="text-sm text-muted-foreground">レッスンとチャプターのパフォーマンス</p></div>
+              <div class="p-6 pt-0">
+                <div class="space-y-4">
+                  ${contentStats.map(content => `
+                    <div class="flex items-center justify-between p-3 hover:bg-stone-50 rounded-lg">
+                      <div class="flex items-center space-x-3">
+                        <div class="h-10 w-10 rounded-lg flex items-center justify-center ${content.type === 'chapter' ? 'bg-emerald-100 text-emerald-700' : content.type === 'lesson' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}">
+                          ${content.type === 'chapter' ? icons.BookOpen.replace('h-6 w-6 text-amber-700', 'h-5 w-5') : content.type === 'lesson' ? icons.Play : icons.Video.replace('h-6 w-6 text-red-700', 'h-5 w-5')}
+                        </div>
+                        <div>
+                          <h3 class="text-sm font-medium text-stone-800">${content.title}</h3>
+                          <p class="text-xs text-stone-500">${content.type === 'chapter' ? `${content.lessons} レッスン` : content.type === 'live' ? `参加者 ${content.attendance}名` : content.duration}</p>
+                        </div>
+                      </div>
+                      <div class="text-right">
+                        <p class="text-sm font-medium text-stone-800">${content.type === 'chapter' ? `${content.avgCompletion}%` : content.type === 'live' ? `${content.attendance}名` : `${content.completion}%`}</p>
+                        <p class="text-xs text-stone-400">${content.views} 視聴</p>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const UserManagement = () => `
+        <div class="space-y-6">
+          <div class="flex justify-between items-center">
+            <div>
+              <h1 class="text-2xl font-serif text-stone-800">受講生管理</h1>
+              <p class="text-stone-500">受講生の学習状況と管理</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <div class="relative">
+                ${icons.Search}
+                <input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-9 w-64" placeholder="受講生を検索...">
+              </div>
+              <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                ${icons.Filter} フィルター
+              </button>
+            </div>
+          </div>
+          <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+            <div class="p-0">
+              <div class="overflow-x-auto">
+                <table class="w-full">
+                  <thead class="bg-stone-50 border-b border-stone-200">
+                    <tr>
+                      <th class="text-left p-4 font-medium text-stone-800">受講生</th>
+                      <th class="text-left p-4 font-medium text-stone-800">ステータス</th>
+                      <th class="text-left p-4 font-medium text-stone-800">進捗</th>
+                      <th class="text-left p-4 font-medium text-stone-800">最終アクセス</th>
+                      <th class="text-left p-4 font-medium text-stone-800">参加日</th>
+                      <th class="text-right p-4 font-medium text-stone-800">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-stone-100">
+                    ${recentUsers.map(user => `
+                      <tr class="hover:bg-stone-50">
+                        <td class="p-4">
+                          <div class="flex items-center space-x-3">
+                            <span class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"><span class="flex h-full w-full items-center justify-center rounded-full bg-muted">${user.name.charAt(0)}</span></span>
+                            <div>
+                              <h3 class="font-medium text-stone-800">${user.name}</h3>
+                              <p class="text-sm text-stone-500">${user.email}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="p-4">
+                          <span class="text-xs ${user.status === 'active' ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-100 text-stone-600'} inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">${user.status === 'active' ? 'アクティブ' : '非アクティブ'}</span>
+                        </td>
+                        <td class="p-4">
+                          <div class="flex items-center space-x-2">
+                            <div class="w-24 bg-stone-200 rounded-full h-2"><div class="bg-emerald-600 h-2 rounded-full" style="width: ${user.progress}%"></div></div>
+                            <span class="text-sm text-stone-600">${user.progress}%</span>
+                          </div>
+                        </td>
+                        <td class="p-4"><span class="text-sm text-stone-600">${user.lastActive}</span></td>
+                        <td class="p-4"><span class="text-sm text-stone-600">${user.joinDate}</span></td>
+                        <td class="p-4 text-right">
+                          <div class="flex items-center justify-end space-x-1">
+                            <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9">${icons.Eye}</button>
+                            <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9">${icons.Edit}</button>
+                            <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9">${icons.MoreHorizontal}</button>
+                          </div>
+                        </td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      const renderContent = () => {
+        switch (activeTab) {
+          case 'overview': return OverviewDashboard();
+          case 'users': return UserManagement();
+          case 'components': return ComponentLibrary();
+          case 'content': return `
+            <div class="text-center py-12">
+              <div class="w-12 h-12 text-stone-400 mx-auto mb-4">${icons.BookOpen.replace('h-6 w-6 text-amber-700', 'h-12 w-12')}</div>
+              <h2 class="text-xl font-serif text-stone-800 mb-2">コンテンツ管理</h2>
+              <p class="text-stone-500 mb-4">レッスンとチャプターの管理機能</p>
+              <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-emerald-700 text-primary-foreground hover:bg-emerald-800 h-10 px-4 py-2">
+                ${icons.PlusCircle} 新しいレッスンを作成
+              </button>
+            </div>
+          `;
+          default: return OverviewDashboard();
+        }
+      };
+
+      const mainHTML = `
+        <div class="min-h-screen bg-stone-50">
+          <header class="bg-white shadow-sm border-b border-stone-200">
+            <div class="container mx-auto px-4 py-3">
+              <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                  ${icons.Leaf}
+                  <div class="text-xl font-serif text-stone-800">E.M.C</div>
+                  <div class="text-xs uppercase tracking-wider text-stone-500">ADMIN</div>
+                </div>
+                <div class="flex items-center space-x-4">
+                  <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">${icons.Bell}</button>
+                  <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full border border-stone-200"><span class="flex h-full w-full items-center justify-center rounded-full bg-muted">管理</span></span>
+                </div>
+              </div>
+              <div class="w-full mt-4">
+                <div class="grid grid-cols-4 w-full bg-muted p-1 rounded-md">
+                  <button data-tab="overview" class="tab-trigger inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-xs font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm" data-state="active">${icons.BarChart3} <span class="hidden sm:inline">概要</span></button>
+                  <button data-tab="users" class="tab-trigger inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-xs font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">${icons.Users.replace('h-6 w-6 text-emerald-700', 'h-4 w-4 mr-1')} <span class="hidden sm:inline">受講生</span></button>
+                  <button data-tab="content" class="tab-trigger inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-xs font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">${icons.BookOpen.replace('h-6 w-6 text-amber-700', 'h-4 w-4 mr-1')} <span class="hidden sm:inline">コンテンツ</span></button>
+                  <button data-tab="components" class="tab-trigger inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-xs font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">${icons.Settings} <span class="hidden sm:inline">コンポーネント</span></button>
+                </div>
+              </div>
+            </div>
+          </header>
+          <main id="main-content" class="container mx-auto px-4 py-6">
+            ${renderContent()}
+          </main>
+        </div>
+      `;
+      document.getElementById('root').innerHTML = mainHTML;
+
+      // Tab switching logic
+      const tabTriggers = document.querySelectorAll('.tab-trigger');
+      const mainContent = document.getElementById('main-content');
+
+      tabTriggers.forEach(trigger => {
+        trigger.addEventListener('click', () => {
+          tabTriggers.forEach(t => t.removeAttribute('data-state'));
+          trigger.setAttribute('data-state', 'active');
+          activeTab = trigger.dataset.tab;
+          mainContent.innerHTML = renderContent();
+        });
+      });
+    };
+
+    App();
+  </script>
+</body>
+</html>

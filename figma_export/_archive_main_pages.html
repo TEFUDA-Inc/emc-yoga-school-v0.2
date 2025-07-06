@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EMC Yoga School - Main Pages</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Noto Serif JP"', 'serif'],
+            sans: ['"Noto Sans JP"', 'sans-serif'],
+          },
+          colors: {
+            stone: {
+              50: '#fafaf9',
+              100: '#f5f5f4',
+              200: '#e7e5e4',
+              300: '#d6d3d1',
+              400: '#a8a29e',
+              500: '#78716c',
+              600: '#57534e',
+              700: '#44403c',
+              800: '#292524',
+            },
+            emerald: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+            },
+            amber: {
+                100: '#fef3c7',
+                600: '#d97706',
+            },
+            blue: {
+                100: '#dbeafe',
+                700: '#1d4ed8',
+            },
+            rose: {
+                50: '#fff1f2',
+                600: '#e11d48',
+                700: '#be123c',
+            },
+            purple: {
+                100: '#f3e8ff',
+                700: '#7e22ce',
+            },
+            green: {
+                100: '#dcfce7',
+                700: '#16a34a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-stone-50">
+
+  <div id="app-container"></div>
+
+  <div class="fixed bottom-4 right-4 bg-white rounded-lg shadow-lg p-2 border border-stone-200 z-50">
+    <div class="text-xs text-stone-500 mb-2">デモページ切り替え:</div>
+    <div class="flex flex-col space-y-1">
+      <button data-page="login" class="page-btn text-xs px-2 py-1 rounded-md border">ログイン</button>
+      <button data-page="dashboard" class="page-btn text-xs px-2 py-1 rounded-md border">ダッシュボード</button>
+      <button data-page="lessons" class="page-btn text-xs px-2 py-1 rounded-md border">レッスン</button>
+      <button data-page="profile" class="page-btn text-xs px-2 py-1 rounded-md border">プロフィール</button>
+    </div>
+  </div>
+
+  <script>
+    // Mock Data
+    const chapters = [
+        { id: 1, title: "第1章 ヨガ哲学・歴史・瞑想", progress: 50, total: 8, completed: 4 },
+        { id: 2, title: "第2章 アーサナ・解剖学", progress: 17, total: 12, completed: 2 },
+        { id: 3, title: "第3章 呼吸法・生理学", progress: 0, total: 6, completed: 0 },
+    ];
+    const recentLessons = [
+        { id: 1, title: "ヨーガとは", chapter: "第1章", duration: "24分", progress: 75, thumbnail: "https://placehold.co/300x160/3D6152/FAF7F2?text=EMC" },
+        { id: 2, title: "ヨガの歴史", chapter: "第1章", duration: "18分", progress: 100, thumbnail: "https://placehold.co/300x160/8B7355/FAF7F2?text=Yoga" },
+        { id: 3, title: "マインドフルネス入門", chapter: "第1章", duration: "32分", progress: 40, thumbnail: "https://placehold.co/300x160/C18856/FAF7F2?text=School" },
+    ];
+    const announcements = [
+        { id: 1, title: "次回のライブセッションは2月16日", date: "2025-02-10", important: true },
+        { id: 2, title: "新しい教材が追加されました", date: "2025-02-05", important: false },
+    ];
+    const liveArchives = [
+        { id: 1, title: "2/16 ヨガ哲学Q&Aセッション", date: "2025-02-16", duration: "55分", thumbnail: "https://placehold.co/300x160/2D5142/FAF7F2?text=Live" },
+        { id: 2, title: "1/20 アーサナの基本と呼吸法", date: "2025-01-20", duration: "65分", thumbnail: "https://placehold.co/300x160/3D6152/FAF7F2?text=Session" },
+    ];
+
+    // Icons SVG Map
+    const icons = {
+        Bell: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-stone-500"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>`,
+        BookOpen: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+        Play: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-emerald-700 fill-emerald-700"><polygon points="5 3 19 12 5 21 5 3"/></svg>`,
+        Clock: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3 mr-1"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+        User: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+        Leaf: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-emerald-700"><path d="M11 20A7 7 0 0 1 4 13H2a10 10 0 0 0 10 10z"/><path d="M12 2a7 7 0 0 1 7 7h2a10 10 0 0 0-10-10z"/></svg>`,
+        ChevronRight: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-1 h-4 w-4"><path d="m9 18 6-6-6-6"/></svg>`,
+        Video: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-emerald-700"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg>`,
+        Calendar: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>`,
+        Search: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-stone-400"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
+        Home: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-1"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+        Settings: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 mr-2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>`,
+        CheckCircle: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
+        PlayCircle: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>`,
+    };
+
+    // Page Templates
+    const Header = (showNavigation = false, activePage = 'dashboard') => `
+      <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-10">
+        <div class="container mx-auto px-4 py-3">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer">
+              ${icons.Leaf}
+              <div class="text-xl font-serif text-stone-800">E.M.C</div>
+              <div class="text-xs uppercase tracking-wider text-stone-500">YOGA SCHOOL</div>
+            </div>
+            ${showNavigation ? `
+            <div class="flex items-center space-x-4">
+              <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 w-10">${icons.Bell}</button>
+              <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full border border-stone-200"><span class="flex h-full w-full items-center justify-center rounded-full bg-muted">ME</span></span>
+            </div>
+            ` : ''}
+          </div>
+          ${showNavigation ? `
+          <div class="w-full mt-4">
+            <div class="grid grid-cols-3 w-full bg-stone-100 p-1 rounded-md">
+                <button data-page="dashboard" class="page-tab-btn inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-xs font-medium ${activePage === 'dashboard' ? 'bg-white text-stone-800 shadow-sm' : 'text-stone-500'}">${icons.Home} <span class="hidden sm:inline">ホーム</span></button>
+                <button data-page="lessons" class="page-tab-btn inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-xs font-medium ${activePage === 'lessons' ? 'bg-white text-stone-800 shadow-sm' : 'text-stone-500'}">${icons.BookOpen} <span class="hidden sm:inline">レッスン</span></button>
+                <button data-page="profile" class="page-tab-btn inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-xs font-medium ${activePage === 'profile' ? 'bg-white text-stone-800 shadow-sm' : 'text-stone-500'}">${icons.User} <span class="hidden sm:inline">マイページ</span></button>
+            </div>
+          </div>
+          ` : ''}
+        </div>
+      </header>
+    `;
+
+    const LoginPage = () => `
+      <div class="min-h-screen bg-gradient-to-br from-emerald-50 to-stone-50 flex items-center justify-center p-4">
+        <div class="w-full max-w-md">
+          <div class="text-center mb-8">
+            <div class="flex items-center justify-center space-x-3 mb-4">
+              <div class="h-8 w-8 text-emerald-700">${icons.Leaf.replace('h-6 w-6', 'h-8 w-8')}</div>
+              <div class="text-2xl font-serif text-stone-800">E.M.C</div>
+              <div class="text-sm uppercase tracking-wider text-stone-500">YOGA SCHOOL</div>
+            </div>
+            <p class="text-stone-600">ヨガの学びの旅を始めましょう</p>
+          </div>
+          <div class="rounded-lg border bg-white text-card-foreground shadow-lg">
+            <div class="p-6 text-center"><h3 class="text-xl font-serif text-stone-800">ログイン</h3><p class="text-sm text-stone-500 mt-1">アカウントにサインインしてください</p></div>
+            <div class="p-6 pt-0 space-y-4">
+              <div>
+                <label class="text-sm font-medium text-stone-700 block mb-1 text-left">メールアドレス</label>
+                <input type="email" placeholder="your-email@example.com" class="mt-1 flex h-10 w-full rounded-md border border-stone-300 bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              </div>
+              <div>
+                <label class="text-sm font-medium text-stone-700 block mb-1 text-left">パスワード</label>
+                <input type="password" placeholder="••••••••" class="mt-1 flex h-10 w-full rounded-md border border-stone-300 bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+              </div>
+              <button class="w-full inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-10 px-4 py-2 bg-emerald-700 text-white hover:bg-emerald-800">ログイン</button>
+            </div>
+            <div class="flex flex-col items-center space-y-2 p-6 pt-0 text-center">
+              <button class="text-sm text-stone-500 hover:text-stone-700">パスワードをお忘れですか？</button>
+              <p class="text-xs text-stone-500">アカウントをお持ちでない場合は管理者にお問い合わせください</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    const DashboardPage = () => `
+      <div class="min-h-screen bg-stone-50">
+        ${Header(true, 'dashboard')}
+        <main class="container mx-auto px-4 py-6 space-y-8">
+          <div class="relative rounded-xl overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-r from-emerald-800/90 to-emerald-700/70"></div>
+            <img src="https://placehold.co/1200x200/2D5142/FFFFFF?text=Welcome" alt="Yoga practice" class="w-full h-48 object-cover">
+            <div class="absolute inset-0 flex flex-col justify-center px-6 text-white">
+              <h1 class="text-2xl font-serif mb-2">おはようございます、Meさん</h1>
+              <p class="text-sm opacity-90 max-w-md mb-4">今日も素晴らしい一日になりますように。あなたの学びの旅を続けましょう。</p>
+              <button class="w-fit inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium h-9 px-3 bg-white text-emerald-800 hover:bg-stone-100">続きから学ぶ ${icons.ChevronRight}</button>
+            </div>
+          </div>
+          <!-- Other cards -->
+        </main>
+      </div>
+    `;
+
+    const LessonsPage = () => `
+      <div class="min-h-screen bg-stone-50">
+        ${Header(true, 'lessons')}
+        <main class="container mx-auto px-4 py-6 space-y-6">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-serif text-stone-800">レッスン一覧</h1>
+                <div class="flex items-center space-x-2">
+                    <div class="relative">
+                        ${icons.Search}
+                        <input placeholder="レッスンを検索..." class="pl-9 w-64 flex h-10 w-full rounded-md border border-stone-300 bg-background px-3 py-2 text-sm">
+                    </div>
+                </div>
+            </div>
+            <div class="w-full">
+                <div class="inline-flex h-10 items-center justify-center rounded-md bg-stone-100 p-1 text-muted-foreground">
+                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium bg-white text-stone-800 shadow-sm">チャプター別</button>
+                    <button class="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium text-stone-500">すべてのレッスン</button>
+                </div>
+                <div class="mt-6 space-y-6">
+                ${chapters.map(chapter => `
+                    <div class="rounded-lg border bg-white text-card-foreground shadow-sm overflow-hidden">
+                        <div class="p-6 bg-stone-100 border-b border-stone-200">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="text-base font-medium text-stone-800">${chapter.title}</h3>
+                                    <p class="text-sm text-stone-500 mt-1">ヨガの基本概念と哲学的背景について学びます</p>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm font-medium text-stone-800">${chapter.progress}%</div>
+                                    <p class="text-xs text-stone-500">${chapter.completed}/${chapter.total} 完了</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-0">
+                            <div class="divide-y divide-stone-100">
+                            ${Array.from({ length: Math.min(3, chapter.total) }).map((_, i) => `
+                                <div class="flex items-center p-4 hover:bg-stone-50 cursor-pointer">
+                                    <div class="mr-3 flex-shrink-0">
+                                        ${i < chapter.completed ? `<div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center">${icons.CheckCircle}</div>` : `<div class="w-8 h-8 rounded-full bg-stone-100 text-stone-500 flex items-center justify-center">${i + 1}</div>`}
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="text-sm font-medium text-stone-800">レッスン ${i + 1}: サンプルレッスンタイトル</h3>
+                                        <p class="text-xs text-stone-500 mt-1 flex items-center">${icons.Clock} 約25分</p>
+                                    </div>
+                                    <button class="text-emerald-700 p-2 rounded-md">${icons.PlayCircle}</button>
+                                </div>
+                            `).join('')}
+                            </div>
+                        </div>
+                        <div class="p-4 border-t border-stone-100 bg-stone-50">
+                            <button class="text-xs text-emerald-700 font-semibold">すべてのレッスンを見る (${chapter.total}件)</button>
+                        </div>
+                    </div>
+                `).join('')}
+                </div>
+            </div>
+        </main>
+      </div>
+    `;
+
+    const ProfilePage = () => `
+      <div class="min-h-screen bg-stone-50">
+        ${Header(true, 'profile')}
+        <main class="container mx-auto px-4 py-6 space-y-6">
+            <div class="flex items-center space-x-4">
+                <span class="relative flex h-16 w-16 shrink-0 overflow-hidden rounded-full border-2 border-stone-200"><span class="flex h-full w-full items-center justify-center rounded-full bg-muted text-lg">ME</span></span>
+                <div>
+                    <h1 class="text-2xl font-serif text-stone-800">Meさん</h1>
+                    <p class="text-sm text-stone-500">受講開始: 2025年1月</p>
+                    <span class="mt-1 inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold bg-emerald-100 text-emerald-800">アクティブ受講生</span>
+                </div>
+            </div>
+            <!-- Other cards -->
+        </main>
+      </div>
+    `;
+
+    // Render logic
+    const renderPage = (page) => {
+      const container = document.getElementById('app-container');
+      switch (page) {
+        case 'login': container.innerHTML = LoginPage(); break;
+        case 'dashboard': container.innerHTML = DashboardPage(); break;
+        case 'lessons': container.innerHTML = LessonsPage(); break;
+        case 'profile': container.innerHTML = ProfilePage(); break;
+        default: container.innerHTML = LoginPage();
+      }
+      // Re-add event listeners for page tabs if they exist
+      document.querySelectorAll('.page-tab-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            renderPage(e.currentTarget.dataset.page);
+        });
+      });
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderPage('login');
+      document.querySelectorAll('.page-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            renderPage(e.currentTarget.dataset.page);
+        });
+      });
+    });
+
+  </script>
+</body>
+</html>

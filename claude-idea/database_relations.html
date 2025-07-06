@@ -1,0 +1,428 @@
+<svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title {
+        font-family: serif;
+        font-size: 24px;
+        font-weight: bold;
+        fill: #2d5142;
+      }
+      .subtitle {
+        font-family: sans-serif;
+        font-size: 14px;
+        fill: #666;
+      }
+      .table-box {
+        fill: #ffffff;
+        stroke: #3d6152;
+        stroke-width: 2;
+        rx: 8;
+      }
+      .table-header {
+        fill: #3d6152;
+      }
+      .table-title {
+        font-family: serif;
+        font-size: 14px;
+        font-weight: bold;
+        fill: white;
+      }
+      .field-text {
+        font-family: monospace;
+        font-size: 11px;
+        fill: #333;
+      }
+      .pk-field {
+        font-family: monospace;
+        font-size: 11px;
+        fill: #c18856;
+        font-weight: bold;
+      }
+      .fk-field {
+        font-family: monospace;
+        font-size: 11px;
+        fill: #0ea5e9;
+      }
+      .relation-line {
+        stroke: #666;
+        stroke-width: 2;
+        fill: none;
+      }
+      .relation-dot {
+        fill: #c18856;
+      }
+      .section-label {
+        font-family: sans-serif;
+        font-size: 16px;
+        font-weight: bold;
+        fill: #8b7355;
+      }
+      .note-text {
+        font-family: sans-serif;
+        font-size: 10px;
+        fill: #666;
+      }
+      .constraint-text {
+        font-family: sans-serif;
+        font-size: 9px;
+        fill: #999;
+      }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1400" height="1000" fill="#FAF7F2" />
+
+  <!-- Title -->
+  <text x="700" y="30" text-anchor="middle" class="title">
+    EMC Yoga School データベース構成図
+  </text>
+  <text x="700" y="50" text-anchor="middle" class="subtitle">
+    Supabase PostgreSQL - テーブル関係とデータ構造
+  </text>
+
+  <!-- Section Labels -->
+  <text x="100" y="90" class="section-label">ユーザー管理</text>
+  <text x="500" y="90" class="section-label">コンテンツ管理</text>
+  <text x="900" y="90" class="section-label">学習進捗</text>
+  <text x="1200" y="90" class="section-label">システム</text>
+
+  <!-- Users Table -->
+  <g>
+    <rect x="50" y="110" width="200" height="180" class="table-box" />
+    <rect x="50" y="110" width="200" height="30" class="table-header" />
+    <text x="150" y="130" text-anchor="middle" class="table-title">users</text>
+
+    <text x="60" y="150" class="pk-field">id (UUID) PK</text>
+    <text x="60" y="165" class="field-text">email (TEXT) UNIQUE</text>
+    <text x="60" y="180" class="field-text">full_name (TEXT)</text>
+    <text x="60" y="195" class="field-text">avatar_url (TEXT)</text>
+    <text x="60" y="210" class="field-text">role (TEXT) DEFAULT 'student'</text>
+    <text x="60" y="225" class="field-text">created_at (TIMESTAMP)</text>
+    <text x="60" y="240" class="field-text">updated_at (TIMESTAMP)</text>
+
+    <text x="60" y="265" class="constraint-text">→ Supabase Auth 連携</text>
+    <text x="60" y="275" class="constraint-text">→ RLS Policy 適用</text>
+  </g>
+
+  <!-- Chapters Table -->
+  <g>
+    <rect x="350" y="110" width="200" height="150" class="table-box" />
+    <rect x="350" y="110" width="200" height="30" class="table-header" />
+    <text x="450" y="130" text-anchor="middle" class="table-title">
+      chapters
+    </text>
+
+    <text x="360" y="150" class="pk-field">id (UUID) PK</text>
+    <text x="360" y="165" class="field-text">title (TEXT) NOT NULL</text>
+    <text x="360" y="180" class="field-text">description (TEXT)</text>
+    <text x="360" y="195" class="field-text">order_num (INTEGER)</text>
+    <text x="360" y="210" class="field-text">created_at (TIMESTAMP)</text>
+    <text x="360" y="225" class="field-text">updated_at (TIMESTAMP)</text>
+
+    <text x="360" y="245" class="constraint-text">→ 順序管理で並び替え</text>
+  </g>
+
+  <!-- Lessons Table -->
+  <g>
+    <rect x="350" y="300" width="200" height="200" class="table-box" />
+    <rect x="350" y="300" width="200" height="30" class="table-header" />
+    <text x="450" y="320" text-anchor="middle" class="table-title">
+      lessons
+    </text>
+
+    <text x="360" y="340" class="pk-field">id (UUID) PK</text>
+    <text x="360" y="355" class="fk-field">chapter_id (UUID) FK</text>
+    <text x="360" y="370" class="field-text">title (TEXT) NOT NULL</text>
+    <text x="360" y="385" class="field-text">description (TEXT)</text>
+    <text x="360" y="400" class="field-text">video_url (TEXT)</text>
+    <text x="360" y="415" class="field-text">thumbnail_url (TEXT)</text>
+    <text x="360" y="430" class="field-text">duration (TEXT)</text>
+    <text x="360" y="445" class="field-text">order_num (INTEGER)</text>
+    <text x="360" y="460" class="field-text">created_at (TIMESTAMP)</text>
+    <text x="360" y="475" class="field-text">updated_at (TIMESTAMP)</text>
+
+    <text x="360" y="490" class="constraint-text">→ YouTube URL 格納</text>
+  </g>
+
+  <!-- Documents Table -->
+  <g>
+    <rect x="600" y="110" width="220" height="220" class="table-box" />
+    <rect x="600" y="110" width="220" height="30" class="table-header" />
+    <text x="710" y="130" text-anchor="middle" class="table-title">
+      documents
+    </text>
+
+    <text x="610" y="150" class="pk-field">id (UUID) PK</text>
+    <text x="610" y="165" class="field-text">title (TEXT) NOT NULL</text>
+    <text x="610" y="180" class="field-text">description (TEXT)</text>
+    <text x="610" y="195" class="field-text">file_url (TEXT) NOT NULL</text>
+    <text x="610" y="210" class="fk-field">lesson_id (UUID) FK NULL</text>
+    <text x="610" y="225" class="field-text">category (TEXT) NOT NULL</text>
+    <text x="610" y="240" class="field-text">file_type (TEXT)</text>
+    <text x="610" y="255" class="field-text">file_size (INTEGER)</text>
+    <text x="610" y="270" class="field-text">created_at (TIMESTAMP)</text>
+    <text x="610" y="285" class="field-text">updated_at (TIMESTAMP)</text>
+
+    <text x="610" y="305" class="constraint-text">→ lesson_id NULL許可</text>
+    <text x="610" y="315" class="constraint-text">
+      → 一般資料として独立可能
+    </text>
+  </g>
+
+  <!-- Live Sessions Table -->
+  <g>
+    <rect x="600" y="370" width="220" height="180" class="table-box" />
+    <rect x="600" y="370" width="220" height="30" class="table-header" />
+    <text x="710" y="390" text-anchor="middle" class="table-title">
+      live_sessions
+    </text>
+
+    <text x="610" y="410" class="pk-field">id (UUID) PK</text>
+    <text x="610" y="425" class="field-text">title (TEXT) NOT NULL</text>
+    <text x="610" y="440" class="field-text">description (TEXT)</text>
+    <text x="610" y="455" class="field-text">video_url (TEXT)</text>
+    <text x="610" y="470" class="field-text">thumbnail_url (TEXT)</text>
+    <text x="610" y="485" class="field-text">scheduled_at (TIMESTAMP)</text>
+    <text x="610" y="500" class="field-text">recorded_at (TIMESTAMP)</text>
+    <text x="610" y="515" class="field-text">duration (TEXT)</text>
+    <text x="610" y="530" class="field-text">created_at (TIMESTAMP)</text>
+
+    <text x="610" y="545" class="constraint-text">
+      → ライブ・アーカイブ両対応
+    </text>
+  </g>
+
+  <!-- User Progress Table -->
+  <g>
+    <rect x="900" y="110" width="220" height="220" class="table-box" />
+    <rect x="900" y="110" width="220" height="30" class="table-header" />
+    <text x="1010" y="130" text-anchor="middle" class="table-title">
+      user_progress
+    </text>
+
+    <text x="910" y="150" class="pk-field">id (UUID) PK</text>
+    <text x="910" y="165" class="fk-field">user_id (UUID) FK</text>
+    <text x="910" y="180" class="fk-field">lesson_id (UUID) FK</text>
+    <text x="910" y="195" class="field-text">progress_percent (INTEGER)</text>
+    <text x="910" y="210" class="field-text">completed (BOOLEAN)</text>
+    <text x="910" y="225" class="field-text">last_position (FLOAT)</text>
+    <text x="910" y="240" class="field-text">completion_date (TIMESTAMP)</text>
+    <text x="910" y="255" class="field-text">notes (TEXT)</text>
+    <text x="910" y="270" class="field-text">created_at (TIMESTAMP)</text>
+    <text x="910" y="285" class="field-text">updated_at (TIMESTAMP)</text>
+
+    <text x="910" y="305" class="constraint-text">
+      → UNIQUE(user_id, lesson_id)
+    </text>
+    <text x="910" y="315" class="constraint-text">→ YouTube API連携</text>
+  </g>
+
+  <!-- Live Session Attendances Table -->
+  <g>
+    <rect x="900" y="370" width="220" height="180" class="table-box" />
+    <rect x="900" y="370" width="220" height="30" class="table-header" />
+    <text x="1010" y="390" text-anchor="middle" class="table-title">
+      live_session_attendances
+    </text>
+
+    <text x="910" y="410" class="pk-field">id (UUID) PK</text>
+    <text x="910" y="425" class="fk-field">user_id (UUID) FK</text>
+    <text x="910" y="440" class="fk-field">live_session_id (UUID) FK</text>
+    <text x="910" y="455" class="field-text">attended (BOOLEAN)</text>
+    <text x="910" y="470" class="field-text">
+      attendance_duration (INTEGER)
+    </text>
+    <text x="910" y="485" class="field-text">join_time (TIMESTAMP)</text>
+    <text x="910" y="500" class="field-text">leave_time (TIMESTAMP)</text>
+    <text x="910" y="515" class="field-text">created_at (TIMESTAMP)</text>
+
+    <text x="910" y="535" class="constraint-text">
+      → UNIQUE(user_id, session_id)
+    </text>
+  </g>
+
+  <!-- Document Views Table -->
+  <g>
+    <rect x="900" y="590" width="220" height="150" class="table-box" />
+    <rect x="900" y="590" width="220" height="30" class="table-header" />
+    <text x="1010" y="610" text-anchor="middle" class="table-title">
+      document_views
+    </text>
+
+    <text x="910" y="630" class="pk-field">id (UUID) PK</text>
+    <text x="910" y="645" class="fk-field">user_id (UUID) FK</text>
+    <text x="910" y="660" class="fk-field">document_id (UUID) FK</text>
+    <text x="910" y="675" class="field-text">viewed (BOOLEAN)</text>
+    <text x="910" y="690" class="field-text">view_duration (INTEGER)</text>
+    <text x="910" y="705" class="field-text">viewed_at (TIMESTAMP)</text>
+    <text x="910" y="720" class="field-text">created_at (TIMESTAMP)</text>
+
+    <text x="910" y="735" class="constraint-text">
+      → UNIQUE(user_id, document_id)
+    </text>
+  </g>
+
+  <!-- Announcements Table -->
+  <g>
+    <rect x="1150" y="110" width="200" height="180" class="table-box" />
+    <rect x="1150" y="110" width="200" height="30" class="table-header" />
+    <text x="1250" y="130" text-anchor="middle" class="table-title">
+      announcements
+    </text>
+
+    <text x="1160" y="150" class="pk-field">id (UUID) PK</text>
+    <text x="1160" y="165" class="field-text">title (TEXT) NOT NULL</text>
+    <text x="1160" y="180" class="field-text">content (TEXT) NOT NULL</text>
+    <text x="1160" y="195" class="field-text">is_important (BOOLEAN)</text>
+    <text x="1160" y="210" class="field-text">published_at (TIMESTAMP)</text>
+    <text x="1160" y="225" class="field-text">created_at (TIMESTAMP)</text>
+    <text x="1160" y="240" class="field-text">updated_at (TIMESTAMP)</text>
+
+    <text x="1160" y="265" class="constraint-text">→ リアルタイム通知対応</text>
+    <text x="1160" y="275" class="constraint-text">
+      → 重要度別フィルタリング
+    </text>
+  </g>
+
+  <!-- Relationships -->
+  <!-- chapters -> lessons -->
+  <line x1="450" y1="260" x2="450" y2="300" class="relation-line" />
+  <circle cx="450" cy="260" r="3" class="relation-dot" />
+  <circle cx="450" cy="300" r="3" class="relation-dot" />
+  <text x="465" y="280" class="note-text">1:N</text>
+
+  <!-- lessons -> documents -->
+  <line x1="550" y1="400" x2="600" y2="300" class="relation-line" />
+  <circle cx="550" cy="400" r="3" class="relation-dot" />
+  <circle cx="600" cy="300" r="3" class="relation-dot" />
+  <text x="570" y="350" class="note-text">1:N (optional)</text>
+
+  <!-- users -> user_progress -->
+  <line x1="250" y1="200" x2="900" y2="220" class="relation-line" />
+  <circle cx="250" cy="200" r="3" class="relation-dot" />
+  <circle cx="900" cy="220" r="3" class="relation-dot" />
+  <text x="575" y="195" class="note-text">1:N</text>
+
+  <!-- lessons -> user_progress -->
+  <line x1="550" y1="350" x2="900" y2="270" class="relation-line" />
+  <circle cx="550" cy="350" r="3" class="relation-dot" />
+  <circle cx="900" cy="270" r="3" class="relation-dot" />
+  <text x="725" y="310" class="note-text">1:N</text>
+
+  <!-- users -> live_session_attendances -->
+  <line x1="250" y1="250" x2="900" y2="430" class="relation-line" />
+  <circle cx="250" cy="250" r="3" class="relation-dot" />
+  <circle cx="900" cy="430" r="3" class="relation-dot" />
+  <text x="575" y="340" class="note-text">1:N</text>
+
+  <!-- live_sessions -> live_session_attendances -->
+  <line x1="820" y1="460" x2="900" y2="460" class="relation-line" />
+  <circle cx="820" cy="460" r="3" class="relation-dot" />
+  <circle cx="900" cy="460" r="3" class="relation-dot" />
+  <text x="850" y="455" class="note-text">1:N</text>
+
+  <!-- users -> document_views -->
+  <line x1="250" y1="270" x2="900" y2="650" class="relation-line" />
+  <circle cx="250" cy="270" r="3" class="relation-dot" />
+  <circle cx="900" cy="650" r="3" class="relation-dot" />
+  <text x="575" y="460" class="note-text">1:N</text>
+
+  <!-- documents -> document_views -->
+  <line x1="820" y1="250" x2="900" y2="650" class="relation-line" />
+  <circle cx="820" cy="250" r="3" class="relation-dot" />
+  <circle cx="900" cy="650" r="3" class="relation-dot" />
+  <text x="850" y="450" class="note-text">1:N</text>
+
+  <!-- Key Features Box -->
+  <rect
+    x="50"
+    y="800"
+    width="300"
+    height="150"
+    fill="white"
+    stroke="#3D6152"
+    stroke-width="2"
+    rx="8"
+  />
+  <text x="60" y="825" class="section-label">主要な制約・機能</text>
+
+  <text x="60" y="845" class="field-text">🔒 Row Level Security (RLS)</text>
+  <text x="70" y="860" class="note-text">
+    • ユーザーは自分のデータのみアクセス
+  </text>
+  <text x="70" y="875" class="note-text">• 管理者は全データアクセス可能</text>
+
+  <text x="60" y="895" class="field-text">🔄 リアルタイム更新</text>
+  <text x="70" y="910" class="note-text">• お知らせの即座反映</text>
+  <text x="70" y="925" class="note-text">• 進捗データの同期</text>
+
+  <text x="60" y="940" class="field-text">📊 複合制約</text>
+  <text x="70" y="955" class="note-text">• UNIQUE制約で重複防止</text>
+
+  <!-- Data Types Legend -->
+  <rect
+    x="400"
+    y="800"
+    width="300"
+    height="150"
+    fill="white"
+    stroke="#3D6152"
+    stroke-width="2"
+    rx="8"
+  />
+  <text x="410" y="825" class="section-label">データ型と制約</text>
+
+  <text x="410" y="845" class="pk-field">PK: Primary Key (UUID)</text>
+  <text x="410" y="860" class="fk-field">FK: Foreign Key (UUID)</text>
+  <text x="410" y="875" class="field-text">TEXT: 可変長文字列</text>
+  <text x="410" y="890" class="field-text">INTEGER: 整数</text>
+  <text x="410" y="905" class="field-text">BOOLEAN: 真偽値</text>
+  <text x="410" y="920" class="field-text">TIMESTAMP: 日時（UTC）</text>
+  <text x="410" y="935" class="field-text">FLOAT: 浮動小数点数</text>
+
+  <!-- Performance Notes -->
+  <rect
+    x="750"
+    y="800"
+    width="300"
+    height="150"
+    fill="white"
+    stroke="#3D6152"
+    stroke-width="2"
+    rx="8"
+  />
+  <text x="760" y="825" class="section-label">パフォーマンス最適化</text>
+
+  <text x="760" y="845" class="field-text">📈 インデックス設計</text>
+  <text x="770" y="860" class="note-text">• 外部キー自動インデックス</text>
+  <text x="770" y="875" class="note-text">• 検索頻度の高いカラム</text>
+
+  <text x="760" y="895" class="field-text">🔍 クエリ最適化</text>
+  <text x="770" y="910" class="note-text">• JOIN操作の効率化</text>
+  <text x="770" y="925" class="note-text">• 進捗データの集計最適化</text>
+
+  <text x="760" y="945" class="field-text">💾 データ管理</text>
+  <text x="770" y="960" class="note-text">• 自動バックアップ（Supabase）</text>
+
+  <!-- Technical Notes -->
+  <rect
+    x="1100"
+    y="800"
+    width="250"
+    height="150"
+    fill="white"
+    stroke="#3D6152"
+    stroke-width="2"
+    rx="8"
+  />
+  <text x="1110" y="825" class="section-label">技術仕様</text>
+
+  <text x="1110" y="845" class="field-text">🗄️ Database: PostgreSQL</text>
+  <text x="1110" y="860" class="field-text">☁️ Platform: Supabase</text>
+  <text x="1110" y="875" class="field-text">🔐 Auth: Supabase Auth</text>
+  <text x="1110" y="890" class="field-text">📡 API: REST + Realtime</text>
+  <text x="1110" y="905" class="field-text">🎥 Video: YouTube API</text>
+  <text x="1110" y="920" class="field-text">📁 Storage: Supabase Storage</text>
+  <text x="1110" y="935" class="field-text">🌐 CDN: 自動配信最適化</text>
+</svg>
