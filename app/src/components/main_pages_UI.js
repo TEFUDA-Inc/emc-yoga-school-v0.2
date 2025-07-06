@@ -24,13 +24,11 @@ import {
   ChevronRight,
   Video,
   Calendar,
-  FileText,
   Search,
   Home,
   Settings,
   CheckCircle,
   PlayCircle,
-  Eye,
 } from "lucide-react";
 
 const EMCMainPages = () => {
