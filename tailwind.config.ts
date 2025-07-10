@@ -5,6 +5,7 @@ const config: Config = {
     // an opt-in flag for upcoming breaking changes
     hoverOnlyWhenSupported: true,
   },
+  plugins: [require('tailwindcss/nesting')],
   content: [
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
     './components/**/*.{js,ts,jsx,tsx,mdx}',
