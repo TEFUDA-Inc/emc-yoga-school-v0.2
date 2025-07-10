@@ -1,8 +1,7 @@
+import MainPagesUI from '@/components/main_pages_UI';
+
 export default function Home() {
   return (
-    <main>
-      <h1>Hello, World!</h1>
-      <p>Welcome to EMC Yoga School.</p>
-    </main>
+    <MainPagesUI />
   );
 }
