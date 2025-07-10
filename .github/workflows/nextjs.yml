@@ -26,6 +26,11 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          cache-dependency-path: '**/package-lock.json' # この行はキャッシュのキーを定義します
+
+      - name: Clear Next.js cache # Next.jsのキャッシュを明示的に削除
+        run: rm -rf .next/cache
+
       
       - name: Install dependencies
         run: npm ci
